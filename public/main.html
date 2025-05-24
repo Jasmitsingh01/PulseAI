@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Code Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div class="container">
+        <div class="main-layout">
+            <!-- Chat -->
+            <div class="chat-container">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-700">AI Assistant</h2>
+                </div>
+                <div id="chatMessages" class="chat-messages">
+                    <div class="message ai-message">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-robot text-blue-500 mr-2"></i>
+                            <span class="font-bold text-gray-700">AI Assistant</span>
+                        </div>
+                        <p class="text-gray-600">Hello! I'm your AI coding assistant. How can I help you today?</p>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <textarea id="userInput" 
+                           class="flex-grow bg-white text-gray-800 px-4 py-2 rounded border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                           placeholder="Ask me anything about coding..."
+                          ></textarea>
+                    <button id="sendMessageBtn" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Send</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="p-4 border-b">
+                    <h2 class="text-xl font-bold text-gray-700">Files</h2>
+                </div>
+                <div class="file-explorer">
+                    <div class="file-item active">
+                        <i class="fas fa-file-code text-blue-500"></i>
+                        <span></span>
+                    </div>
+                 
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Editor and Tabs -->
+                <div class="editor-chat-container">
+                    <!-- Tabs -->
+                    <div class="tabs-container">
+                        <div class="tabs-header">
+                            <button class="tab-btn active" data-tab="editor">
+                                <i class="fas fa-code"></i>
+                                <span>Editor</span>
+                            </button>
+                            <button class="tab-btn" data-tab="preview">
+                                <i class="fas fa-eye"></i>
+                                <span>Preview</span>
+                            </button>
+                        </div>
+
+                        <!-- Editor Tab -->
+                        <div class="tab-content active" id="editor-tab">
+                            <div class="editor-container">
+                                <div class="flex justify-between items-center">
+                                    <h2 class="text-xl font-bold text-gray-700">Code Editor</h2>
+                                    <div class="flex gap-2">
+                                        <button id="runCodeBtn" class="btn btn-success">
+                                            <i class="fas fa-play"></i>
+                                            <span>Run</span>
+                                        </button>
+                                        <button id="saveCodeBtn" class="btn btn-primary">
+                                            <i class="fas fa-save"></i>
+                                            <span>Save</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="editor"></div>
+                            </div>
+                        </div>
+
+                        <!-- Preview Tab -->
+                        <div class="tab-content" id="preview-tab">
+                            <div class="preview-container">
+                                <div class="flex justify-between items-center">
+                                    <h2 class="text-xl font-bold text-gray-700">Live Preview</h2>
+                                    <button id="refreshPreviewBtn" class="btn btn-primary">
+                                        <i class="fas fa-sync-alt"></i>
+                                        <span>Refresh</span>
+                                    </button>
+                                </div>
+                                <iframe id="previewFrame"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .form-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1rem;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .form-group.error input {
+            border-color: #dc3545;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .name-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="form-title">Sign Up</h1>
+        <form id="signupForm" onsubmit="return validateForm(event)">
+            <div class="name-group">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                    <div class="error-message">First name is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                    <div class="error-message">Last name is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error-message">Please enter a valid email address</div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <div class="error-message">Password must be at least 6 characters</div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <div class="error-message">Passwords do not match</div>
+            </div>
+            <button type="submit" class="btn">Sign Up</button>
+            <div class="form-footer">
+                Already have an account? <a href="login.html">Login</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script>
+        // Check if user is already logged in
+        if (isAuthenticated()) {
+            window.location.href = '/main.html';
+        }
+
+        async function validateForm(event) {
+            event.preventDefault();
+            let isValid = true;
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+
+            // Reset previous errors
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error');
+            });
+
+            // First Name validation
+            if (firstName.value.trim() === '') {
+                firstName.parentElement.classList.add('error');
+                isValid = false;
+            }
+
+            // Last Name validation
+            if (lastName.value.trim() === '') {
+                lastName.parentElement.classList.add('error');
+                isValid = false;
+            }
+
+            // Email validation
+            if (!email.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                email.parentElement.classList.add('error');
+                isValid = false;
+            }
+
+            // Password validation
+            if (password.value.length < 6) {
+                password.parentElement.classList.add('error');
+                isValid = false;
+            }
+
+            // Confirm Password validation
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.parentElement.classList.add('error');
+                isValid = false;
+            }
+
+            if (isValid) {
+                try {
+                    const response = await fetch('http://localhost:8080/api/auth/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            firstName: firstName.value,
+                            lastName: lastName.value,
+                            email: email.value,
+                            password: password.value
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Registration failed');
+                    }
+
+                    // Store token and user data
+             
+                    
+                
+                } catch (error) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    errorDiv.textContent = error.message;
+                    document.querySelector('.form-group').appendChild(errorDiv);
+                }
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html> 
